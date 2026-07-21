@@ -1,0 +1,193 @@
+/* =========================================================================
+   Punto Casa de Bolsa - tema terminal
+   Superficie oscura #14141b. Todos los colores de texto verificados a
+   >= 4.5:1 y los de marca a >= 3:1 sobre esa superficie.
+   El morado institucional #522D6D queda reservado para cromo (bordes,
+   bandas, acentos): a 1.71:1 nunca debe portar texto.
+   ========================================================================= */
+
+:root {
+  --plano:            #0a0a0f;
+  --superficie:       #14141b;
+  --superficie-alta:  #1c1c26;
+  --superficie-hover: #23232f;
+  --borde:            #2a2a38;
+  --borde-fuerte:     #3a3a4d;
+
+  --tinta:            #f4f3f7;
+  --tinta-2:          #a8a5b8;
+  --tinta-3:          #7d7a90;
+
+  --marca:            #522D6D;
+  --marca-clara:      #9085e9;
+  --marca-media:      #6f4bb0;
+
+  --positivo:         #22c55e;
+  --negativo:         #ef4444;
+  --positivo-marca:   #0ca30c;
+  --negativo-marca:   #d03b3b;
+  --alerta:           #fab219;
+  --serio:            #ec835a;
+
+  --mono: 'JetBrains Mono', 'IBM Plex Mono', 'SF Mono', Consolas, monospace;
+  --sans: 'Inter', -apple-system, 'Segoe UI', Roboto, sans-serif;
+}
+
+.stApp { background: var(--plano); }
+
+html, body, [class*="css"], .stMarkdown, p, span, div, label {
+  font-family: var(--sans);
+  color: var(--tinta);
+}
+
+/* Numerales tabulares en todo el tablero: las cifras deben alinearse. */
+.stDataFrame, .stTable, [data-testid="stMetricValue"], .cifra, .mono {
+  font-family: var(--mono) !important;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1, "zero" 1;
+}
+
+/* ---------- Encabezado ---------- */
+.cabecera {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem; padding: 0.9rem 1.4rem; margin-bottom: 1.1rem;
+  background: linear-gradient(96deg, #17111f 0%, var(--superficie) 46%, var(--superficie) 100%);
+  border: 1px solid var(--borde);
+  border-left: 3px solid var(--marca-media);
+  border-radius: 4px;
+}
+.cabecera-titulo {
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.20em;
+  text-transform: uppercase; color: var(--tinta-2); margin: 0;
+}
+.cabecera-sub {
+  font-family: var(--mono); font-size: 0.7rem; color: var(--tinta-3);
+  margin-top: 0.2rem; letter-spacing: 0.03em;
+}
+.cabecera-logo svg { display: block; }
+
+/* ---------- Tarjetas de indicador ---------- */
+/* Las tarjetas se reacomodan solas: por debajo de ~7 columnas caben menos
+   por renglon en vez de recortarse contra el borde derecho. El numero de
+   columnas que pide el llamador queda como maximo, no como imposicion. */
+.tira-kpi {
+  display: grid; gap: 1px; background: var(--borde);
+  grid-template-columns: repeat(auto-fit, minmax(158px, 1fr)) !important;
+  border: 1px solid var(--borde); border-radius: 4px; overflow: hidden;
+  margin-bottom: 1.1rem;
+}
+.kpi {
+  background: var(--superficie); padding: 0.8rem 1rem 0.85rem;
+  display: flex; flex-direction: column; gap: 0.28rem;
+  transition: background 120ms ease;
+}
+.kpi:hover { background: var(--superficie-alta); }
+.kpi-etiqueta {
+  font-size: 0.61rem; font-weight: 600; letter-spacing: 0.13em;
+  text-transform: uppercase; color: var(--tinta-3);
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.kpi-valor {
+  font-family: var(--mono); font-size: clamp(0.95rem, 1.05vw, 1.3rem);
+  font-weight: 600; letter-spacing: -0.02em; color: var(--tinta);
+  line-height: 1.15; font-variant-numeric: tabular-nums;
+  white-space: nowrap;   /* "$1,147.20 M" nunca se parte en dos renglones */
+}
+.kpi-delta {
+  font-family: var(--mono); font-size: 0.72rem; font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+.kpi-nota { font-size: 0.63rem; color: var(--tinta-3); }
+
+.pos { color: var(--positivo); }
+.neg { color: var(--negativo); }
+.neutro { color: var(--tinta-2); }
+
+/* Marca de direccion: el signo acompana al color, nunca color solo. */
+.pos::before { content: "▲ "; font-size: 0.62em; vertical-align: 0.12em; }
+.neg::before { content: "▼ "; font-size: 0.62em; vertical-align: 0.12em; }
+
+/* ---------- Paneles ---------- */
+.panel {
+  background: var(--superficie); border: 1px solid var(--borde);
+  border-radius: 4px; padding: 1rem 1.15rem; margin-bottom: 0.9rem;
+}
+.panel-titulo {
+  font-size: 0.64rem; font-weight: 700; letter-spacing: 0.16em;
+  text-transform: uppercase; color: var(--tinta-2);
+  padding-bottom: 0.55rem; margin-bottom: 0.85rem;
+  border-bottom: 1px solid var(--borde);
+  display: flex; align-items: center; justify-content: space-between;
+}
+.panel-titulo::before {
+  content: ""; display: inline-block; width: 3px; height: 11px;
+  background: var(--marca-clara); margin-right: 0.5rem; vertical-align: -1px;
+}
+
+/* ---------- Hallazgos del diagnostico ---------- */
+.hallazgo {
+  display: flex; gap: 0.75rem; padding: 0.7rem 0.9rem; margin-bottom: 0.5rem;
+  background: var(--superficie-alta); border-radius: 3px;
+  border-left: 3px solid var(--borde-fuerte);
+}
+.hallazgo.critico  { border-left-color: var(--negativo-marca); }
+.hallazgo.atencion { border-left-color: var(--alerta); }
+.hallazgo.favorable{ border-left-color: var(--positivo-marca); }
+.hallazgo-icono { font-size: 0.95rem; line-height: 1.35; }
+.hallazgo-titulo { font-weight: 620; font-size: 0.83rem; margin-bottom: 0.15rem; }
+.hallazgo-detalle { font-size: 0.775rem; color: var(--tinta-2); line-height: 1.5; }
+
+/* ---------- Pestanas ---------- */
+.stTabs [data-baseweb="tab-list"] {
+  gap: 0; background: var(--superficie); border: 1px solid var(--borde);
+  border-radius: 4px; padding: 3px;
+}
+.stTabs [data-baseweb="tab"] {
+  height: 34px; padding: 0 0.95rem; background: transparent;
+  border-radius: 3px; font-size: 0.735rem; font-weight: 600;
+  letter-spacing: 0.05em; color: var(--tinta-3);
+}
+.stTabs [aria-selected="true"] {
+  background: var(--marca) !important; color: #ffffff !important;
+}
+
+/* ---------- Barra lateral ---------- */
+[data-testid="stSidebar"] {
+  background: var(--superficie); border-right: 1px solid var(--borde);
+}
+[data-testid="stSidebar"] .stMarkdown h3 {
+  font-size: 0.63rem; letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--tinta-3); font-weight: 700;
+  border-bottom: 1px solid var(--borde); padding-bottom: 0.4rem;
+  margin-top: 1.1rem;
+}
+
+/* ---------- Tablas ---------- */
+[data-testid="stDataFrame"] { border: 1px solid var(--borde); border-radius: 4px; }
+
+/* ---------- Controles ---------- */
+.stButton > button {
+  background: var(--marca); color: #fff; border: none; border-radius: 3px;
+  font-weight: 600; font-size: 0.76rem; letter-spacing: 0.04em;
+  transition: background 130ms ease;
+}
+.stButton > button:hover { background: var(--marca-media); color: #fff; }
+
+/* ---------- Pie ---------- */
+.pie {
+  margin-top: 1.6rem; padding-top: 0.75rem; border-top: 1px solid var(--borde);
+  font-size: 0.66rem; color: var(--tinta-3); line-height: 1.65;
+}
+
+/* ---------- Etiqueta de estado de dato ---------- */
+.sello {
+  display: inline-block; padding: 0.1rem 0.42rem; border-radius: 2px;
+  font-family: var(--mono); font-size: 0.6rem; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+}
+.sello-vivo   { background: rgba(12,163,12,0.16);  color: var(--positivo); }
+.sello-est    { background: rgba(250,178,25,0.16); color: var(--alerta); }
+.sello-marca  { background: rgba(144,133,233,0.16); color: var(--marca-clara); }
+
+#MainMenu, footer { visibility: hidden; }
+.block-container { padding-top: 2.1rem; max-width: 1500px; }
